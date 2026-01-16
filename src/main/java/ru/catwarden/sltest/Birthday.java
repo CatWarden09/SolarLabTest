@@ -1,6 +1,6 @@
 package ru.catwarden.sltest;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Birthday {
     private String name;

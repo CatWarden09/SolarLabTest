@@ -44,4 +44,21 @@ public class Database {
 
         return list;
     }
+
+    public void setNewBirthday(String name, Date date){
+        String query = "INSERT into birthday (name,birthday) VALUES(?,?)";
+
+
+        try(Connection conn = connectToDatabase();
+        PreparedStatement statement = conn.prepareStatement(query);
+        ) { statement.setString(1, name);
+            statement.setDate(2, date);
+            statement.executeUpdate();
+
+        } catch (SQLException exception){
+            exception.printStackTrace();
+        }
+
+
+    }
 }

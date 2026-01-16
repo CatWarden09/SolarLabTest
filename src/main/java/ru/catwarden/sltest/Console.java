@@ -1,5 +1,6 @@
 package ru.catwarden.sltest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,10 +33,13 @@ public class Console {
                 case "1":
                     showCurrentBirthdays();
                     showUpcomingBirthdays();
-                    break;
+                    continue;
                 case "2":
                     showAllBirthdays();
-                    break;
+                    continue;
+                case "3":
+                    setNewBirthday();
+                    continue;
                 case "0":
                     running = false;
                     break;
@@ -65,6 +69,93 @@ public class Console {
         }
     }
 
+    public void setNewBirthday(){
+
+
+        System.out.println("Укажите имя");
+        String name = scanner.nextLine();
+
+        String year;
+        System.out.println("Укажите год рождения в формате YYYY");
+        while(true){
+            year = scanner.nextLine();
+
+            if(!year.chars().allMatch(Character::isDigit)) {
+                System.out.println("Обнаружены некорректные символы!");
+                continue;
+            } else if (year.length()!=4){
+                System.out.println("Некорректный формат года!");
+                continue;
+
+            }
+            int y = Integer.parseInt(year);
+
+            if(y>2025 || y<1920){
+                System.out.println("Некорректный год!");
+                continue;
+            }
+            else {
+                break;
+            }
+        }
+
+        // TODO add the leap year checking (29 days in February)
+        // check java.time.Year
+        String month;
+        System.out.println("Укажите месяц рождения в формате MM");
+        while(true){
+            month = scanner.nextLine();
+
+            if(!month.chars().allMatch(Character::isDigit)){
+                System.out.println("Обнаружены некорректные символы!");
+                continue;
+            }
+
+            else if (month.length()!=2) {
+                System.out.println("Некорректный формат месяца!");
+                continue;
+
+            }
+            int m = Integer.parseInt(month);
+
+            if (m>12 || m<1) {
+                System.out.println("Некорректный месяц!");
+                continue;
+
+            } else {
+                break;
+            }
+        }
+
+        String day;
+        System.out.println("Укажите день рождения в формате DD");
+        while(true){
+            day = scanner.nextLine();
+
+            if(!day.chars().allMatch(Character::isDigit)){
+                System.out.println("Обнаружены некорректные символы!");
+                continue;
+            }
+
+            else if (day.length()!=2) {
+                System.out.println("Некорректный формат дня!");
+                continue;
+            }
+
+            int d = Integer.parseInt(day);
+
+            // separate check for February
+            if((month.equals("02") && (d>28 || d<1)) || (!month.equals("02") && (d > 31 || d < 1))){
+                System.out.println("Некорректный день!");
+                continue;
+            }
+            break;
+        }
+        controller.setNewBirthday(name, year, month, day);
+    }
+
+
+
     public void printSeparator(){
         System.out.println("________________");
     }
@@ -73,3 +164,4 @@ public class Console {
         System.out.println("Поздравлятор 3000");
     }
 }
+
