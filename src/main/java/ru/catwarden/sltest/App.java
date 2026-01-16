@@ -1,0 +1,19 @@
+package ru.catwarden.sltest;
+import java.util.Scanner;
+
+public class App {
+
+    public static void main( String[] args ){
+
+        Scanner sc = new Scanner(System.in);
+
+
+        Config config = new Config("config.properties");
+        Database db = new Database(config);
+        Controller controller = new Controller(db);
+
+        Console console = new Console(sc, controller);
+
+        console.show_ui();
+    }
+}
