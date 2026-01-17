@@ -85,53 +85,34 @@ public class Controller {
     }
 
     public List<BirthdayWithIndex> getUpcomingBirthdays(){
-        // get all the birthdays to avoid complicated SQL-queries and parse the date right in this method
         List<Birthday> list = db.getAllBirthdays();
         List<BirthdayWithIndex> parsed_list = new ArrayList<>();
 
         LocalDate current_date = LocalDate.now();
-        LocalDate end_date = current_date.plusDays(8); // add 8 days because later check does not include the end day itself
+        LocalDate end_date = current_date.plusDays(7);
 
-        int current_year = current_date.getYear();
-        int next_year = end_date.getYear();
+        int index = 1;
 
-        // format the SQL-data from the full date to day and month and filter the upcoming birthdays
-        // this loop checks if the birthday is within the current year or in the next year if the 7-day gap goes into it
-        int index = 1; // index is needed here for the birthday order in the console output since the indexes in list will not represent the actual birthday indexes (the loop may skip unsuitable Birthdays)
         for(Birthday birthday:list){
+            MonthDay birthday_month_day = MonthDay.from(birthday.getDate().toLocalDate());
 
-            MonthDay birthday_date = MonthDay.from(birthday.getDate().toLocalDate());
-            MonthDay birthday_start_date = MonthDay.from(current_date);
-            MonthDay birthday_end_date = MonthDay.from(end_date);
+            // get the birthday date with the current year (get month and day, then assign a year)
+            LocalDate current_birthday_date = birthday_month_day.atYear(current_date.getYear());
 
-            // check if the end date is in current year
-            if (birthday_start_date.isBefore(birthday_end_date)) {
-                if (birthday_date.isAfter(birthday_start_date) && birthday_date.isBefore(birthday_end_date)) {
-                    BirthdayWithIndex birthday_parsed = new BirthdayWithIndex();
-                    birthday_parsed.setIndex(index);
-                    birthday_parsed.setName(birthday.getName());
+            // if the birthday already was in this year, assign the next year
+            if (current_birthday_date.isBefore(current_date)) {
+                current_birthday_date = birthday_month_day.atYear(current_date.getYear() + 1);
+            }
 
-                    // get the current year birthday date and pass it to the BirthdayWithIndex object for the console output
-                    LocalDate birthday_in_current_year = LocalDate.of(current_year,birthday.getDate().toLocalDate().getMonthValue(), birthday.getDate().toLocalDate().getDayOfMonth());
-                    birthday_parsed.setDate(java.sql.Date.valueOf(birthday_in_current_year));
+            // check if the birthday is inside the dates range and create a Birthday object
+            if (!current_birthday_date.isBefore(current_date) && !current_birthday_date.isAfter(end_date)) {
+                BirthdayWithIndex birthday_parsed = new BirthdayWithIndex();
+                birthday_parsed.setIndex(index);
+                birthday_parsed.setName(birthday.getName());
+                birthday_parsed.setDate(java.sql.Date.valueOf(current_birthday_date));
 
-                    parsed_list.add(birthday_parsed);
-                    ++index;
-                }
-            } else{
-                if(birthday_date.isAfter(birthday_start_date) || birthday_date.isBefore(birthday_end_date)){
-                    BirthdayWithIndex birthday_parsed = new BirthdayWithIndex();
-                    birthday_parsed.setIndex(index);
-                    birthday_parsed.setName(birthday.getName());
-
-                    // get the next year birthday date and pass it to the BirthdayWithIndex object for the console output
-                    LocalDate birthday_in_next_year = LocalDate.of(next_year,birthday.getDate().toLocalDate().getMonthValue(), birthday.getDate().toLocalDate().getDayOfMonth());
-                    birthday_parsed.setDate(java.sql.Date.valueOf(birthday_in_next_year));
-
-                    parsed_list.add(birthday_parsed);
-                    ++index;
-                }
-
+                parsed_list.add(birthday_parsed);
+                ++index;
             }
         }
         return parsed_list;
