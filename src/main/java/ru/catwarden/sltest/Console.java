@@ -1,6 +1,5 @@
 package ru.catwarden.sltest;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -59,13 +58,14 @@ public class Console {
         System.out.println("Список ближайших ДР:");
     }
     public void showAllBirthdays(){
-        List<Birthday> list = controller.getAllBirthdayList();
+        List<BirthdayWithIndex> list = controller.getAllBirthdayList();
 
         printSeparator();
         System.out.println("Список всех ДР:");
-        for(Birthday day:list){
-            System.out.print(day.getName() + " ");
-            System.out.println(day.getDate());
+        for(BirthdayWithIndex birthday :list){
+            System.out.print(birthday.getIndex() + "." + " ");
+            System.out.print(birthday.getName() + " ");
+            System.out.println(birthday.getDate());
         }
     }
 
