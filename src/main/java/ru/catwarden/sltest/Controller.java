@@ -97,8 +97,9 @@ public class Controller {
 
         // format the SQL-data from the full date to day and month and filter the upcoming birthdays
         // this loop checks if the birthday is within the current year or in the next year if the 7-day gap goes into it
+        int index = 1; // index is needed here for the birthday order in the console output since the indexes in list will not represent the actual birthday indexes (the loop may skip unsuitable Birthdays)
         for(Birthday birthday:list){
-            int index = 1; // index is needed here for the birthday order in the console output since the indexes in list will not represent the actual birthday indexes (the loop may skip unsuitable Birthdays)
+
             MonthDay birthday_date = MonthDay.from(birthday.getDate().toLocalDate());
             MonthDay birthday_start_date = MonthDay.from(current_date);
             MonthDay birthday_end_date = MonthDay.from(end_date);
@@ -115,6 +116,7 @@ public class Controller {
                     birthday_parsed.setDate(java.sql.Date.valueOf(birthday_in_current_year));
 
                     parsed_list.add(birthday_parsed);
+                    ++index;
                 }
             } else{
                 if(birthday_date.isAfter(birthday_start_date) || birthday_date.isBefore(birthday_end_date)){
@@ -127,8 +129,7 @@ public class Controller {
                     birthday_parsed.setDate(java.sql.Date.valueOf(birthday_in_next_year));
 
                     parsed_list.add(birthday_parsed);
-
-                    parsed_list.add(birthday_parsed);
+                    ++index;
                 }
 
             }
