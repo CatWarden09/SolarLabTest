@@ -88,7 +88,8 @@
                 for (BirthdayWithIndex birthday : list) {
                     System.out.print(birthday.getIndex() + "." + " ");
                     System.out.print(birthday.getName() + " ");
-                    System.out.println(birthday.getDate());
+                    System.out.print(birthday.getDate());
+                    System.out.println(" будет праздновать своё " + birthday.getAge() + "-летие!");
                 }
             } else{
                 System.out.println("В ближайшую неделю ДР нет!");
@@ -109,7 +110,8 @@
             for(BirthdayWithIndex birthday :list){
                 System.out.print(birthday.getIndex() + "." + " ");
                 System.out.print(birthday.getName() + " ");
-                System.out.println(birthday.getDate());
+                System.out.print(birthday.getDate());
+                System.out.println(" праздновал своё " + birthday.getAge() + "-летие!");
             }
         }
 

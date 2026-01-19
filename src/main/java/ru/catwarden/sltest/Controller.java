@@ -86,7 +86,7 @@ public class Controller {
 
         LocalDate current_date = LocalDate.now();
         LocalDate end_date = current_date.plusDays(7);
-
+        int current_year = current_date.getYear();
         int index = 1;
 
         // this loop checks if the birthday in inside the given date range
@@ -112,6 +112,16 @@ public class Controller {
                 birthday_parsed.setName(birthday.getName());
                 birthday_parsed.setDate(java.sql.Date.valueOf(current_birthday_date));
 
+
+                int year_parsed = birthday.getDate().toLocalDate().getYear();
+
+                // set the person's age depending on the next year check (if the birthday is in the next year, add +1 to the age)
+                if(current_birthday_date.getYear()>current_date.getYear()){
+                    birthday_parsed.setAge((current_year+1)-year_parsed);
+                } else{
+                    birthday_parsed.setAge(current_year-year_parsed);
+                }
+
                 parsed_list.add(birthday_parsed);
                 ++index;
             }
@@ -126,6 +136,7 @@ public class Controller {
         // get the date the 7 days before and the date 1 day before today (to avoid current birthdays)
         LocalDate current_date = LocalDate.now().minusDays(1);
         LocalDate start_date = current_date.minusDays(7);
+        int current_year = current_date.getYear();
 
         int index = 1;
 
@@ -147,6 +158,15 @@ public class Controller {
                 birthday_parsed.setIndex(index);
                 birthday_parsed.setName(birthday.getName());
                 birthday_parsed.setDate(java.sql.Date.valueOf(current_birthday_date));
+
+                int year_parsed = birthday.getDate().toLocalDate().getYear();
+
+                // set the person's age depending on the previous year check (if the birthday was in the last year, subtract -1 from the age)
+                if(current_birthday_date.getYear()<current_date.getYear()){
+                    birthday_parsed.setAge((current_year-1)-year_parsed);
+                } else{
+                    birthday_parsed.setAge(current_year-year_parsed);
+                }
 
                 parsed_list.add(birthday_parsed);
                 ++index;

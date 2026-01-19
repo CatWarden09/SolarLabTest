@@ -19,7 +19,6 @@ public class App {
         console.printIntro();
         console.showCurrentBirthdays();
         console.showUpcomingBirthdays();
-        console.showSkippedBirthdays();
         console.showUi();
 
     }
