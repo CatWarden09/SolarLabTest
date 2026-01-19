@@ -84,9 +84,10 @@ public class Controller {
         List<Birthday> list = db.getAllBirthdays();
         List<BirthdayWithIndex> parsed_list = new ArrayList<>();
 
-        LocalDate current_date = LocalDate.now();
-        LocalDate end_date = current_date.plusDays(7);
-        int current_year = current_date.getYear();
+        // exclude today by adding +1 to the current date
+        LocalDate start_date = LocalDate.now().plusDays(1);
+        LocalDate end_date = start_date.plusDays(7);
+        int current_year = start_date.getYear();
         int index = 1;
 
         // this loop checks if the birthday in inside the given date range
@@ -98,15 +99,15 @@ public class Controller {
             MonthDay birthday_month_day = MonthDay.from(birthday.getDate().toLocalDate());
 
             // get the birthday date with the current year (get month and day, then assign a year)
-            LocalDate current_birthday_date = birthday_month_day.atYear(current_date.getYear());
+            LocalDate current_birthday_date = birthday_month_day.atYear(start_date.getYear());
 
             // if the birthday already was in this year, assign the next year
-            if (current_birthday_date.isBefore(current_date)) {
-                current_birthday_date = birthday_month_day.atYear(current_date.getYear() + 1);
+            if (current_birthday_date.isBefore(start_date)) {
+                current_birthday_date = birthday_month_day.atYear(start_date.getYear() + 1);
             }
 
             // check if the birthday is inside the dates range and create a Birthday object
-            if (!current_birthday_date.isBefore(current_date) && !current_birthday_date.isAfter(end_date)) {
+            if (!current_birthday_date.isBefore(start_date) && !current_birthday_date.isAfter(end_date)) {
                 BirthdayWithIndex birthday_parsed = new BirthdayWithIndex();
                 birthday_parsed.setIndex(index);
                 birthday_parsed.setName(birthday.getName());
@@ -116,7 +117,7 @@ public class Controller {
                 int year_parsed = birthday.getDate().toLocalDate().getYear();
 
                 // set the person's age depending on the next year check (if the birthday is in the next year, add +1 to the age)
-                if(current_birthday_date.getYear()>current_date.getYear()){
+                if(current_birthday_date.getYear()> start_date.getYear()){
                     birthday_parsed.setAge((current_year+1)-year_parsed);
                 } else{
                     birthday_parsed.setAge(current_year-year_parsed);
@@ -134,9 +135,9 @@ public class Controller {
         List<BirthdayWithIndex> parsed_list = new ArrayList<>();
 
         // get the date the 7 days before and the date 1 day before today (to avoid current birthdays)
-        LocalDate current_date = LocalDate.now().minusDays(1);
-        LocalDate start_date = current_date.minusDays(7);
-        int current_year = current_date.getYear();
+        LocalDate end_date = LocalDate.now().minusDays(1);
+        LocalDate start_date = end_date.minusDays(7);
+        int current_year = end_date.getYear();
 
         int index = 1;
 
@@ -145,15 +146,15 @@ public class Controller {
             MonthDay birthday_month_day = MonthDay.from(birthday.getDate().toLocalDate());
 
             // get the birthday date with the current year (get month and day, then assign a year)
-            LocalDate current_birthday_date = birthday_month_day.atYear(current_date.getYear());
+            LocalDate current_birthday_date = birthday_month_day.atYear(end_date.getYear());
 
             // if the birthday was not yet in this year, assign the previous year
-            if (current_birthday_date.isAfter(current_date)){
-                current_birthday_date = birthday_month_day.atYear(current_date.getYear() - 1);
+            if (current_birthday_date.isAfter(end_date)){
+                current_birthday_date = birthday_month_day.atYear(end_date.getYear() - 1);
             }
 
             // check if the birthday in inside the dates range and create a Birthday object
-            if((!current_birthday_date.isBefore(start_date) && !current_birthday_date.isAfter(current_date))){
+            if((!current_birthday_date.isBefore(start_date) && !current_birthday_date.isAfter(end_date))){
                 BirthdayWithIndex birthday_parsed = new BirthdayWithIndex();
                 birthday_parsed.setIndex(index);
                 birthday_parsed.setName(birthday.getName());
@@ -162,7 +163,7 @@ public class Controller {
                 int year_parsed = birthday.getDate().toLocalDate().getYear();
 
                 // set the person's age depending on the previous year check (if the birthday was in the last year, subtract -1 from the age)
-                if(current_birthday_date.getYear()<current_date.getYear()){
+                if(current_birthday_date.getYear()< end_date.getYear()){
                     birthday_parsed.setAge((current_year-1)-year_parsed);
                 } else{
                     birthday_parsed.setAge(current_year-year_parsed);
