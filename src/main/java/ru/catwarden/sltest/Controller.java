@@ -89,6 +89,11 @@ public class Controller {
 
         int index = 1;
 
+        // this loop checks if the birthday in inside the given date range
+        // we get only the month and day of the birthday because in the DB the date is stored with the year of birth and we need to get rid of it there (or no birthdays will be in the date range because of the year)
+        // to work correctly with the year gap (like if some of the next 7 days are in the next year), check the birthdays, which month and day are lesser than current date, in the next year, by adding +1 year to their date
+        // so if the month and day of a birthday with a current year are lesser than current month and day of the current date with year (like 01.02.25 < 31.12.25) we need to check this pair of month and day in the next year
+        // some of the actual birthdays within the next 7 days might get lost because of the current year (01.01.26 would be in the date range if the current date is 31.12.25 end date is 06.01.26, but the 01.01.25 will not)
         for(Birthday birthday:list){
             MonthDay birthday_month_day = MonthDay.from(birthday.getDate().toLocalDate());
 
@@ -112,6 +117,42 @@ public class Controller {
             }
         }
         return parsed_list;
+    }
+
+    public List<BirthdayWithIndex> getSkippedBirthdays(){
+        List<Birthday> list = db.getAllBirthdays();
+        List<BirthdayWithIndex> parsed_list = new ArrayList<>();
+
+        // get the date the 7 days before and the date 1 day before today (to avoid current birthdays)
+        LocalDate current_date = LocalDate.now().minusDays(1);
+        LocalDate start_date = current_date.minusDays(7);
+
+        int index = 1;
+
+        // this loop works exactly like the upcoming birthdays case, we just check the previous year instead of next
+        for(Birthday birthday:list){
+            MonthDay birthday_month_day = MonthDay.from(birthday.getDate().toLocalDate());
+
+            // get the birthday date with the current year (get month and day, then assign a year)
+            LocalDate current_birthday_date = birthday_month_day.atYear(current_date.getYear());
+
+            // if the birthday was not yet in this year, assign the previous year
+            if (current_birthday_date.isAfter(current_date)){
+                current_birthday_date = birthday_month_day.atYear(current_date.getYear() - 1);
+            }
+
+            // check if the birthday in inside the dates range and create a Birthday object
+            if((!current_birthday_date.isBefore(start_date) && !current_birthday_date.isAfter(current_date))){
+                BirthdayWithIndex birthday_parsed = new BirthdayWithIndex();
+                birthday_parsed.setIndex(index);
+                birthday_parsed.setName(birthday.getName());
+                birthday_parsed.setDate(java.sql.Date.valueOf(current_birthday_date));
+
+                parsed_list.add(birthday_parsed);
+                ++index;
+            }
+        }
+        return  parsed_list;
     }
 
 }

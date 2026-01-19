@@ -24,8 +24,9 @@
                 System.out.println("1. Показать текущие и ближайшие ДР");
                 System.out.println("2. Показать все ДР");
                 System.out.println("3. Добавить новый ДР");
-                System.out.println("4. Удалить ДР");
-                System.out.println("5. Изменить ДР");
+                System.out.println("4. Показать прошедшие ДР");
+                System.out.println("5. Удалить ДР");
+                System.out.println("6. Изменить ДР");
                 System.out.println("0. Выйти");
 
                 String cmd = scanner.nextLine();
@@ -42,9 +43,12 @@
                         setNewBirthday();
                         break;
                     case "4":
-                        deleteBirthday();
+                        showSkippedBirthdays();
                         break;
                     case "5":
+                        deleteBirthday();
+                        break;
+                    case "6":
                         editBirthday();
                         break;
                     case "0":
@@ -91,6 +95,25 @@
             }
 
         }
+
+        public void showSkippedBirthdays(){
+            List<BirthdayWithIndex> list = controller.getSkippedBirthdays();
+
+            if(list.isEmpty()){
+                System.out.println("ДР не найдены!");
+                return;
+            }
+
+            printSeparator();
+            System.out.println("Список прошедших ДР:");
+            for(BirthdayWithIndex birthday :list){
+                System.out.print(birthday.getIndex() + "." + " ");
+                System.out.print(birthday.getName() + " ");
+                System.out.println(birthday.getDate());
+            }
+        }
+
+
         public void showAllBirthdays(){
             List<BirthdayWithIndex> list = controller.getAllBirthdayList();
 

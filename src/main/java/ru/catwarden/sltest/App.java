@@ -1,6 +1,6 @@
 package ru.catwarden.sltest;
 import java.util.Scanner;
-// TODO add birthdays sorting, add skipped birthdays display
+// TODO add birthdays sorting
 public class App {
 
     public static void main( String[] args ){
@@ -19,6 +19,7 @@ public class App {
         console.printIntro();
         console.showCurrentBirthdays();
         console.showUpcomingBirthdays();
+        console.showSkippedBirthdays();
         console.showUi();
 
     }
