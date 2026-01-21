@@ -18,9 +18,6 @@
 ## Стек
 - Java 17+
 - JDBC
-- java.time (LocalDate, MonthDay)
-- java.util (Scanner, List, ArrayList, Properties)
-- java.sql (Connection, PreparedStatement, ResultSet, Date)
 - PostgreSQL
 
 ## Конфигурация
